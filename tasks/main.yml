@@ -51,7 +51,7 @@
 
 - name: Deploy database files
   copy:
-    src: "{{ item }}"
+    src: "../src/sql/{{ item }}"
     dest: "~/{{ item }}"
   loop:
       - "{{ mysql_backup_filename }}"
