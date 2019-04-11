@@ -1,0 +1,27 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Chase Reidinger
+  description: MySQL setup for Debian/Ubuntu
+  company: "AdepDev, LLC"
+  license: license (MIT)
+  min_ansible_version: 2.4
+
+  platforms:
+  - name: Debian
+    versions:
+    - all
+  - name: Ubuntu
+    versions:
+    - all
+
+  galaxy_tags:
+    - development
+    - web
+    - server
+    - ubuntu
+    - debian
+    - lamp
+    - mysql
+    - apache
