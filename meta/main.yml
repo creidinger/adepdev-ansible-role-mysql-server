@@ -2,6 +2,7 @@
 dependencies: []
 
 galaxy_info:
+  role_name: mysql_server
   author: Chase Reidinger
   description: MySQL setup for Debian/Ubuntu
   company: "AdepDev, LLC"
