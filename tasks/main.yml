@@ -1,6 +1,6 @@
 ---
 - name: Install MySQL Packages
-  apt:
+  package:
     pkg: "{{ item }}"
     state: latest
   loop:
