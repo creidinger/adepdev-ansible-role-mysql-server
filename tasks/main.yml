@@ -2,11 +2,13 @@
 - name: Install MySQL Packages
   package:
     pkg: "{{ item }}"
-    state: latest
+    state: present
   loop:
     - mysql-server
     - mysql-client
     - python-mysqldb
+    - mysqldb
+    - pymysqldb
 
 - name: Update root password for all root accounts
   mysql_user:
