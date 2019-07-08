@@ -12,8 +12,6 @@
 #   pip:
 #     name: MySQL-python
 
-  command: sudo pip3 install MySql-python
-
 - name: Update root password for all root accounts
   mysql_user:
     name: root
