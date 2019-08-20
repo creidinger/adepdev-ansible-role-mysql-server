@@ -7,10 +7,40 @@
     - mysql-server
     - mysql-client
     - python-mysqldb
+    - MySQL-python
 
 # - name: Install Pip MySQL Packages
 #   pip:
 #     name: MySQL-python
+
+# The following 3 commands are due to the apparent inability for Ansible to set the root password properly
+# in MYSQL 5.7.3+. This may be redundant in a future update.
+- name: Copy over rootpass.sql file to change root@localhost password (mysql 5.7.3+ workaround)
+  template:
+    src: "templates/{{ item }}.j2"
+    dest: "~/{{ item }}"
+    owner: root
+    mode: 0600
+  loop:
+      - rootpass.sql
+      - my.cnf
+
+- name: rename my.cnf
+  command: mv ~/my.cnf ~/.my.cnf
+
+- name: Import rootpass.sql file
+  mysql_db:
+    state: import
+    name: mysql
+    target: ~/rootpass.sql
+
+- name: Clean up db and cnf file
+  file:
+    path: ~/{{ item }}
+    state: absent
+  loop:
+      - rootpass.sql
+      - .my.cnf
 
 - name: Update root password for all root accounts
   mysql_user:
@@ -83,32 +113,3 @@
   file:
     path: "~/{{ mysql_backup_filename }}"
     state: absent
-
-# The following 3 commands are due to the apparent inability for Ansible to set the root password properly
-# in MYSQL 5.7.3+. This may be redundant in a future update.
-- name: Copy over rootpass.sql file to change root@localhost password (mysql 5.7.3+ workaround)
-  template:
-    src: "templates/{{ item }}.j2"
-    dest: "~/{{ item }}"
-    owner: root
-    mode: 0600
-  loop:
-      - rootpass.sql
-      - my.cnf
-
-- name: rename my.cnf
-  command: mv ~/my.cnf ~/.my.cnf
-
-- name: Import rootpass.sql file
-  mysql_db:
-    state: import
-    name: mysql
-    target: ~/rootpass.sql
-
-- name: Clean up db and cnf file
-  file:
-    path: ~/{{ item }}
-    state: absent
-  loop:
-      - rootpass.sql
-      - .my.cnf
