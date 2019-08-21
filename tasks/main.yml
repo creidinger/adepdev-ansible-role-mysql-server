@@ -7,7 +7,6 @@
     - mysql-server
     - mysql-client
     - python-mysqldb
-    - MySQL-python
 
 # - name: Install Pip MySQL Packages
 #   pip:
@@ -42,18 +41,18 @@
       - rootpass.sql
       - .my.cnf
 
-- name: Update root password for all root accounts
-  mysql_user:
-    name: root
-    host: "{{ item }}"
-    check_implicit_admin: yes
-    password: "{{ mysql_root_password }}"
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
-  loop:
-    - 127.0.0.1
-    - ::1
-    - localhost
+# - name: Update root password for all root accounts
+#   mysql_user:
+#     name: root
+#     host: "{{ item }}"
+#     check_implicit_admin: yes
+#     password: "{{ mysql_root_password }}"
+#     login_user: root
+#     login_password: "{{ mysql_root_password }}"
+#   loop:
+#     - 127.0.0.1
+#     - ::1
+#     - localhost
 
 - name: check if DB exists
   shell: "mysql -uroot -p{{ mysql_root_password }} -e 'SHOW DATABASES;'"
