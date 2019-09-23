@@ -8,12 +8,19 @@
     - mysql-client
     - python-mysqldb
 
+- name: Install MYSQL pip dependancies (pip3 required)
+  command: pip3 install pymysql
+
 - name: Update root password for all root accounts
   mysql_user:
     name: root
     host: "{{ item }}"
     check_implicit_admin: yes
     password: "{{ mysql_root_password }}"
+    # fix for this issue
+    # No allowed to login to root@localhost on sql on mysql 5.7.3+
+    # https://www.bountysource.com/issues/65416948-mysql_user-broken-in-2-7-1-when-using-root-my-cnf
+    login_unix_socket: /var/run/mysqld/mysqld.sock
     login_user: root
     login_password: "{{ mysql_root_password }}"
   loop:
@@ -79,32 +86,3 @@
   file:
     path: "~/{{ mysql_backup_filename }}"
     state: absent
-
-# The following 3 commands are due to the apparent inability for Ansible to set the root password properly
-# in MYSQL 5.7.3+. This may be redundant in a future update.
-- name: Copy over rootpass.sql file to change root@localhost password (mysql 5.7.3+ workaround)
-  template:
-    src: "templates/{{ item }}.j2"
-    dest: "~/{{ item }}"
-    owner: root
-    mode: 0600
-  loop:
-      - rootpass.sql
-      - my.cnf
-
-- name: rename my.cnf
-  command: mv ~/my.cnf ~/.my.cnf
-
-- name: Import rootpass.sql file
-  mysql_db:
-    state: import
-    name: mysql
-    target: ~/rootpass.sql
-
-- name: Clean up db and cnf file
-  file:
-    path: ~/{{ item }}
-    state: absent
-  loop:
-      - rootpass.sql
-      - .my.cnf
