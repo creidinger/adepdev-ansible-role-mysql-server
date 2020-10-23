@@ -6,7 +6,7 @@
   loop:
     - mysql-server
     - mysql-client
-    - python-mysqldb
+    - python3-mysqldb
 
 - name: Install MYSQL pip dependancies (pip3 required)
   command: pip3 install pymysql
